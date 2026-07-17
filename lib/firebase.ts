@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   query,
+  where,
   orderBy,
   limit as fsLimit,
   type Firestore,
@@ -66,8 +67,13 @@ export async function saveDebateSession(session: DebateSession): Promise<void> {
 }
 
 export async function listDebateSessions(max = 30): Promise<DebateSession[]> {
-  await ensureAnonymousAuth();
-  const q = query(collection(getDb(), DEBATES_COLLECTION), orderBy('createdAt', 'desc'), fsLimit(max));
+  const uid = await ensureAnonymousAuth();
+  const q = query(
+    collection(getDb(), DEBATES_COLLECTION),
+    where('ownerUid', '==', uid),
+    orderBy('createdAt', 'desc'),
+    fsLimit(max),
+  );
   const snap = await getDocs(q);
   return snap.docs.map((d) => d.data() as DebateSession);
 }
