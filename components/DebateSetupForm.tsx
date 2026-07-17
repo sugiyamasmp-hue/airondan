@@ -1,6 +1,14 @@
 'use client';
 
-import { LANDING_TYPES, MODEL_LABELS, type LandingType, type ModelId, type Participant } from '@/lib/types';
+import {
+  ARTICLE_STYLES,
+  LANDING_TYPES,
+  MODEL_LABELS,
+  type ArticleStyle,
+  type LandingType,
+  type ModelId,
+  type Participant,
+} from '@/lib/types';
 import { getParticipantColors } from '@/lib/palette';
 
 const TURN_OPTIONS = [3, 4, 5];
@@ -12,6 +20,11 @@ const LANDING_HINTS: Record<LandingType, string> = {
   両論併記型: '結論は出さず論点整理',
 };
 
+const ARTICLE_STYLE_HINTS: Record<ArticleStyle, string> = {
+  要約: '討論を読み物として要約',
+  完全収録: '発言を全文そのまま掲載',
+};
+
 interface Props {
   topic: string;
   onTopicChange: (v: string) => void;
@@ -19,6 +32,8 @@ interface Props {
   onLandingTypeChange: (v: LandingType) => void;
   turnCount: number;
   onTurnCountChange: (v: number) => void;
+  articleStyle: ArticleStyle;
+  onArticleStyleChange: (v: ArticleStyle) => void;
   participants: Participant[];
   onParticipantsChange: (participants: Participant[]) => void;
   onStart: () => void;
@@ -32,6 +47,8 @@ export default function DebateSetupForm({
   onLandingTypeChange,
   turnCount,
   onTurnCountChange,
+  articleStyle,
+  onArticleStyleChange,
   participants,
   onParticipantsChange,
   onStart,
@@ -98,6 +115,22 @@ export default function DebateSetupForm({
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="field">
+        <label>記事スタイル</label>
+        <div className="chiplist">
+          {ARTICLE_STYLES.map((style) => (
+            <div
+              key={style}
+              className={`chip ${articleStyle === style ? 'active' : ''}`}
+              onClick={() => onArticleStyleChange(style)}
+            >
+              {style}
+              <small>{ARTICLE_STYLE_HINTS[style]}</small>
+            </div>
+          ))}
         </div>
       </div>
 

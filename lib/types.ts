@@ -16,6 +16,8 @@ export interface DebateTurn {
 
 export type LandingType = '属性分岐型' | '明確結論型' | '両論併記型';
 
+export type ArticleStyle = '要約' | '完全収録';
+
 export interface Article {
   title: string;
   body: string;
@@ -36,6 +38,8 @@ export interface DebateSession {
 }
 
 export const LANDING_TYPES: LandingType[] = ['属性分岐型', '明確結論型', '両論併記型'];
+
+export const ARTICLE_STYLES: ArticleStyle[] = ['要約', '完全収録'];
 
 export const LANDING_TYPE_INSTRUCTIONS: Record<LandingType, string> = {
   属性分岐型:

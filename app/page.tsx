@@ -8,7 +8,7 @@ import ArticlePreview from '@/components/ArticlePreview';
 import HistoryList from '@/components/HistoryList';
 import Toast from '@/components/Toast';
 import { saveDebateSession } from '@/lib/firebase';
-import type { Article, DebateSession, DebateTurn, LandingType, Participant } from '@/lib/types';
+import type { Article, ArticleStyle, DebateSession, DebateTurn, LandingType, Participant } from '@/lib/types';
 
 const DEFAULT_PARTICIPANTS: Participant[] = [
   { name: 'クロちゃん', model: 'claude', role: '', colorSeed: '0' },
@@ -19,6 +19,7 @@ export default function Home() {
   const [topic, setTopic] = useState('');
   const [landingType, setLandingType] = useState<LandingType>('属性分岐型');
   const [turnCount, setTurnCount] = useState(4);
+  const [articleStyle, setArticleStyle] = useState<ArticleStyle>('要約');
   const [participants, setParticipants] = useState<Participant[]>(DEFAULT_PARTICIPANTS);
 
   const [transcript, setTranscript] = useState<DebateTurn[]>([]);
@@ -134,8 +135,10 @@ export default function Home() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         topic,
-        transcript: log.map((t) => ({ speaker: t.speaker, text: t.text })),
+        transcript: log,
         conclusion: conclusionText,
+        landingType,
+        articleStyle,
       }),
     });
     const data = await res.json();
@@ -172,6 +175,8 @@ export default function Home() {
         onLandingTypeChange={setLandingType}
         turnCount={turnCount}
         onTurnCountChange={setTurnCount}
+        articleStyle={articleStyle}
+        onArticleStyleChange={setArticleStyle}
         participants={participants}
         onParticipantsChange={setParticipants}
         onStart={runDebate}
