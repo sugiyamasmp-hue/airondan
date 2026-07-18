@@ -42,11 +42,13 @@ export default function HistoryList() {
     <div id="historyList">
       {sessions.map((s) => {
         const date = new Date(s.createdAt);
+        const mode = s.mode ?? 'debate';
         return (
           <div className="history-item" key={s.id} onClick={() => router.push(`/history/${s.id}`)}>
-            <span>{s.topic}</span>
+            <span className={`history-mode-dot ${mode}`} title={mode === 'meeting' ? '会議' : '討論'} />
+            <span className="history-topic">{s.topic}</span>
             <span className="meta">
-              {date.getMonth() + 1}/{date.getDate()}
+              {mode === 'meeting' ? '会議' : '討論'} ・ {date.getMonth() + 1}/{date.getDate()}
             </span>
           </div>
         );

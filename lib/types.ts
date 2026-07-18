@@ -1,4 +1,4 @@
-export type ModelId = 'claude' | 'gpt' | 'deepseek';
+export type ModelId = 'claude' | 'gpt' | 'deepseek' | 'human';
 
 export interface Participant {
   name: string; // 表示名（クロちゃん/チャーリー/ディープ 等、自由入力可）
@@ -21,16 +21,26 @@ export interface Article {
   body: string;
 }
 
+export type SessionMode = 'debate' | 'meeting';
+
+export interface MeetingSummary {
+  decisions: string[]; // 決定事項
+  pending: string[]; // 保留事項
+  nextActions: string[]; // 次のアクション
+}
+
 export interface DebateSession {
   id: string;
   topic: string;
   category?: '分析系' | '意見系' | '金融系'; // 手動タグ、任意
-  landingType: LandingType;
+  mode: SessionMode;
+  landingType?: LandingType; // debateモードのみ
   participants: Participant[];
-  turnCount: number;
+  turnCount?: number; // debateモードのみ
   transcript: DebateTurn[];
-  conclusion: string;
-  article: Article;
+  conclusion?: string; // debateモードのみ
+  article?: Article; // debateモードのみ
+  meetingSummary?: MeetingSummary; // meetingモードのみ
   result?: '的中' | '外れ' | '該当なし'; // 後日追記用（競馬・予測系のみ）
   createdAt: string;
 }
@@ -50,4 +60,5 @@ export const MODEL_LABELS: Record<ModelId, string> = {
   claude: 'Claude',
   gpt: 'GPT',
   deepseek: 'DeepSeek',
+  human: '人間',
 };
