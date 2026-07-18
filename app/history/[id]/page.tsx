@@ -6,6 +6,8 @@ import Link from 'next/link';
 import DebateFeed from '@/components/DebateFeed';
 import ConclusionCard from '@/components/ConclusionCard';
 import ArticlePreview from '@/components/ArticlePreview';
+import MeetingFeed from '@/components/MeetingFeed';
+import MeetingSummaryCard from '@/components/MeetingSummaryCard';
 import Toast from '@/components/Toast';
 import { getDebateSession } from '@/lib/firebase';
 import type { DebateSession } from '@/lib/types';
@@ -54,13 +56,25 @@ export default function HistoryDetailPage() {
             </div>
           </div>
 
-          <div className="section-eyebrow">討論</div>
-          <DebateFeed turns={session.transcript} participants={session.participants} />
+          {(session.mode ?? 'debate') === 'meeting' ? (
+            <>
+              <div className="section-eyebrow">会議</div>
+              <MeetingFeed turns={session.transcript} participants={session.participants} />
+              {session.meetingSummary && <MeetingSummaryCard summary={session.meetingSummary} />}
+            </>
+          ) : (
+            <>
+              <div className="section-eyebrow">討論</div>
+              <DebateFeed turns={session.transcript} participants={session.participants} />
 
-          {session.conclusion && <ConclusionCard landingType={session.landingType} conclusion={session.conclusion} />}
+              {session.conclusion && session.landingType && (
+                <ConclusionCard landingType={session.landingType} conclusion={session.conclusion} />
+              )}
 
-          {session.article && (
-            <ArticlePreview article={session.article} onCopied={() => showToast('コピーしました')} />
+              {session.article && (
+                <ArticlePreview article={session.article} onCopied={() => showToast('コピーしました')} />
+              )}
+            </>
           )}
         </>
       )}

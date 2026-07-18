@@ -10,6 +10,10 @@ export const MODEL_GENERATORS: Record<ModelId, Generator> = {
   claude: generateClaudeText,
   gpt: generateOpenAiText,
   deepseek: generateDeepSeekText,
+  // human はAPIを呼ばず、クライアント側でそのままFirestoreに保存するのみ（呼ばれたら実装ミス）。
+  human: async () => {
+    throw new Error('human参加者の発言はAPIを経由しません');
+  },
 };
 
 export function getModelGenerator(model: ModelId): Generator {
